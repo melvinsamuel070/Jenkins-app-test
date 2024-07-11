@@ -48,8 +48,8 @@ pipeline {
         stage("deploy"){
             steps{
                 sh '''
-                    cd /var/www/html
-                    sudo git clone https://github.com/monyslim/pix-mix.git /html
+                    cd /var/www
+                    sudo git clone https://github.com/monyslim/pix-mix.git html
                 '''
             }
         }
