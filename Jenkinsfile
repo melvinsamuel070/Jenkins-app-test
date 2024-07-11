@@ -25,11 +25,15 @@ pipeline {
         stage("install nginx"){
             steps {
                 sh '''
-                    sudo apt-get update
-                    sudo apt upgrade -y
-                    sudo apt-get install nginx -y
-                    sudo systemctl enable nginx
-                    sudo systemctl start nginx
+                 // Define the password (replace with a secure method in production)
+                    def password = "<your_password>"
+                    
+                    // Execute commands using sudo with -S option
+                    sh "echo '${password}' | sudo -S apt-get update"
+                    sh "echo '${password}' | sudo -S apt upgrade -y"
+                    sh "echo '${password}' | sudo -S apt-get install nginx -y"
+                    sh "echo '${password}' | sudo -S systemctl enable nginx"
+                    sh "echo '${password}' | sudo -S systemctl start nginx"
                 '''
             }
         }
