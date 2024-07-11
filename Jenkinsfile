@@ -22,40 +22,37 @@ pipeline {
                 '''
             }
         }
-        stage("install nginx"){
+        stage("Install Nginx") {
             steps {
-                sh '''
-                 // Define the password (replace with a secure method in production)
-                    def password = "<your_password>"
+                script {
+                    def password = env.MY_SUDO_PASSWORD  // Use an environment variable instead of hardcoding
                     
-                    // Execute commands using sudo with -S option
-                    sh "echo '${password}' | sudo -S apt-get update"
-                    sh "echo '${password}' | sudo -S apt upgrade -y"
-                    sh "echo '${password}' | sudo -S apt-get install nginx -y"
-                    sh "echo '${password}' | sudo -S systemctl enable nginx"
-                    sh "echo '${password}' | sudo -S systemctl start nginx"
-                '''
+                    // Update and install Nginx
+                    sh "echo ${password} | sudo -S apt-get update"
+                    sh "echo ${password} | sudo -S apt upgrade -y"
+                    sh "echo ${password} | sudo -S apt-get install nginx -y"
+                    sh "echo ${password} | sudo -S systemctl enable nginx"
+                    sh "echo ${password} | sudo -S systemctl start nginx"
+                }
             }
         }
-        stage("build"){
-            steps{
-                sh '''
-                    sudo chown -R jenkins:jenkins /var*
-                    cd /var
-                    sudo rm -rf www
-                    sudo mkdir www
-                    cd /var/www
-
-                '''
+        stage("Build") {
+            steps {
+                script {
+                    // Change ownership and set up directory
+                    sh "sudo chown -R jenkins:jenkins /var"
+                    sh "sudo rm -rf /var/www"
+                    sh "sudo mkdir /var/www"
+                }
             }
         }
-        stage("deploy"){
-            steps{
-                sh '''
-                    cd /var/www
-                    sudo git clone https://github.com/monyslim/pix-mix.git html
-                '''
+        stage("Deploy") {
+            steps {
+                script {
+                    // Clone repository to web server directory
+                    sh "sudo git clone https://github.com/monyslim/pix-mix.git /var/www/html"
+                }
             }
         }
     }
-}
+    
