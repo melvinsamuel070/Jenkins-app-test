@@ -22,37 +22,37 @@ pipeline {
                 '''
             }
         }
-        stage("Install Nginx") {
+        stage("install nginx"){
             steps {
-                script {
-                    def password = env.MY_SUDO_PASSWORD  // Use an environment variable instead of hardcoding
-                    
-                    // Update and install Nginx
-                    sh "echo ${password} | sudo -S apt-get update"
-                    sh "echo ${password} | sudo -S apt upgrade -y"
-                    sh "echo ${password} | sudo -S apt-get install nginx -y"
-                    sh "echo ${password} | sudo -S systemctl enable nginx"
-                    sh "echo ${password} | sudo -S systemctl start nginx"
-                }
+                sh '''
+                    sudo apt-get update
+                    sudo apt upgrade -y
+                    sudo apt-get install nginx -y
+                    sudo systemctl enable nginx
+                    sudo systemctl start nginx
+                '''
             }
         }
-        stage("Build") {
-            steps {
-                script {
-                    // Change ownership and set up directory
-                    sh "sudo chown -R jenkins:jenkins /var"
-                    sh "sudo rm -rf /var/www"
-                    sh "sudo mkdir /var/www"
-                }
+        stage("build"){
+            steps{
+                sh '''
+                    sudo chown -R jenkins:jenkins /var*
+                    cd /var
+                    sudo rm -rf www
+                    sudo mkdir www
+                    cd /var/www
+
+                '''
             }
         }
-        stage("Deploy") {
-            steps {
-                script {
-                    // Clone repository to web server directory
-                    sh "sudo git clone https://github.com/monyslim/pix-mix.git /var/www/html"
-                }
+        stage("deploy"){
+            steps{
+                sh '''
+                    cd /var/www/html
+                    sudo git clone https://github.com/monyslim/pix-mix.git html
+                '''
             }
         }
     }
+}
     
