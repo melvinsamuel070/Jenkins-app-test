@@ -37,11 +37,10 @@ pipeline {
             steps{
                 sh '''
                     sudo chown -R jenkins:jenkins /var*
-                    cd /var
-                    sudo rm -rf www
-                    sudo mkdir www
                     cd /var/www
-
+                    sudo rm -rf html
+                    mkdir html
+                    cd html
                 '''
             }
         }
@@ -49,7 +48,7 @@ pipeline {
             steps{
                 sh '''
                     cd /var/www/html
-                    sudo git clone https://github.com/monyslim/pix-mix.git /html
+                    sudo git clone https://github.com/monyslim/pix-mix.git 
                 '''
             }
         }
