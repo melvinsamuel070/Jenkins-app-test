@@ -40,7 +40,7 @@ pipeline {
                     cd /var/www
                     sudo rm -rf html
                     mkdir html
-                    cd html
+                    
                 '''
             }
         }
@@ -48,7 +48,7 @@ pipeline {
             steps{
                 sh '''
                     cd /var/www/html
-                    sudo git clone https://github.com/monyslim/pix-mix.git 
+                    sudo git clone https://github.com/monyslim/pix-mix.git html
                 '''
             }
         }
